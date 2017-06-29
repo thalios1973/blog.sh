@@ -2,7 +2,7 @@
 
 - Static page support
  
-- Provide additional template placeholder options (e.g. title, subtitle,
+x Provide additional template placeholder options (e.g. title, subtitle,
     baseurl for home links, etc.). Should make it easier to just get
     started
   - .config will need to be extended to support this as well

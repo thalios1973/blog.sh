@@ -42,11 +42,13 @@ source "$config"
 editor=${editor:-"$EDITOR"}
 [[ $editor == "" ]] && editor="vi"
 tmpdir=${tmpdir:-"/tmp"}
-templatefile=${templatefile:-"template.html"}
+templatefile=${templatefile:-"template.tmpl"}
 index_entries=${index_entries:-10} # default of 10 entires on index page
 tag_prefix=${tag_prefix:-"tag_"}
-baseurl=${baseurl:-""}
+baseurl=${baseurl:-"http://somesite.example/blog"}
 previewpref=${previewpref:-"prev"}
+blogtitle=${blogtitle:-"My Blog"}
+blogsubtitle=${blogsubtitle:-"Yet another blog!"}
 
 # Global variables not to be overridden via config.
 # Or just creating global variables for easy of use later
@@ -721,6 +723,12 @@ done
 # Resetting positon on ARGs
 shift $((OPTIND-1))
 numopts=$#
+
+# Setting up template file. Inserts TITLE, SUBTITLE, and BASEURL. CONTENT
+# is left for later manipulation.
+tmptemplate=$(mkstemp)
+sed -e "s#~~~TITLE~~~#$blogtitle#g; s#~~~SUBTITLE~~~#$blogsubtitle#g; s#~~~BASEURL~~~#$baseurl#g;" "$templatefile" > "$tmptemplate"
+templatefile="$tmptemplate"
 
 case ${1-} in
   new)

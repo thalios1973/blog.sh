@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <!-- Responsive layout stuff -->
+  <style>
+    /* Dead Simple Grid (c) 2015 Vladimir Agafonkin */
+
+    .row .row { margin:  0 -1.5em; }
+    .col      { padding: 0  1.5em; }
+
+    .row:after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    @media only screen { .col {
+      float: left;
+      width: 100%;
+      box-sizing: border-box;
+    }}
+  </style>
+  <title>~~~TITLE~~~</title>
+</head>
+<body>
+
+<div class="container">
+
+<div class="row" id="title-bar">
+<div id="logoimage"></div>
+<h1 class="inline">~~~TITLE~~~</h1>
+<div id='description'>~~~SUBTITLE~~~</div>
+</div>
+</a>
+
+<div class="row menu">
+<ul>
+  <li><a href="~~~BASEURL~~~">Home</a></li>
+  <li><a href="allposts.html">All Posts</a></li>
+  <li><a href="alltags.html">All Tags</a></li>
+</ul>
+</div>
+
+<div class="row"><!-- main row -->
+
+<div class="col content">
+
+~~~CONTENT~~~
+
+</div><!-- content -->
+
+</div><!-- main row -->
+
+<div class="row info">
+<hr>
+<p>(Some copyright info and a link to mail could go here.)<br>
+This webpage generated with <a href="https://github.com/thalios1973/blog.sh" target="_new">blog.sh.</a></p>
+
+</div><!-- info -->
+</div><!-- containter -->
+
+</body>
+</html>
