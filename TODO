@@ -16,6 +16,8 @@ x Provide additional template placeholder options (e.g. title, subtitle,
 
 - Implement ability to delete posts (low priority)
 
+- Need some check to make sure there is a template file.
+
 x Implement a preview URL scheme
   - Maybe a "draft" directory?
 
