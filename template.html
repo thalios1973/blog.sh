@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+
+	<!-- grid framework -->
+	<link rel="stylesheet" href="css/grid.css">
+
+	<!-- Responsive layout stuff -->
+	<style>
+		.container { max-width: 1200px; }
+
+		@media only screen and (min-width: 34em) {
+			.feature { width: 50%; }
+		}
+
+		@media only screen and (min-width: 54em) {
+			.content { width: 70%; }
+			.sidebar { width: 30%; }
+		}
+
+		@media only screen and (min-width: 76em) {
+			.content { width: 70%; } /* 7/12 */
+			.sidebar { width: 30%; } /* 5/12 */
+		}
+	</style>
+	
+<!--	<link rel="stylesheet" href="css/screen.css"> -->
+	<link rel="stylesheet" href="css/custom.css">
+
+	<title>Grid Test</title>
+</head>
+<body>
+
+<div class="container">
+
+<div class="row title-bar">
+<h1>This is the title bar</h1>
+</div>
+
+<div class="row menu">
+<a href="#">Home</a>
+<a href="#">About</a>
+<a href="#">Contact</a>
+</div>
+
+<div class="row"><!-- main row -->
+
+<div class="col content">
+
+~~~CONTENT~~~
+
+</div><!-- content -->
+
+<div class="col sidebar">
+<h4>Sidebar</h4>
+<p>This could be a blog roll.</p>
+<ul>
+<li><a href="#">Somesite #1</a></li>
+<li><a href="#">Somesite #2</a></li>
+<li><a href="#">Somesite #3</a></li>
+<li><a href="#">Somesite #4</a></li>
+<li><a href="#">Somesite #5</a></li>
+<li><a href="#">Somesite #6</a></li>
+<li><a href="#">Somesite #7</a></li>
+<li><a href="#">Somesite #8</a></li>
+</ul>
+</div><!-- sidebar -->
+
+</div><!-- main row -->
+
+<div class="row info">
+
+<p>This is the info row... for simple things like contact, copyright, etc.</p>
+
+</div><!-- info -->
+
+</div><!-- containter -->
+</body>
+</html>
