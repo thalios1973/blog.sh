@@ -1,16 +1,27 @@
+- Implement abilit to delete posts (low priority)
+
+- RSS or ATOM feed capability
+
+- Static page support
+ 
+- Provide additional template placeholder options (e.g. title, subtitle,
+    baseurl for home links, etc.). Should make it easier to just get
+    started
+  - .config will need to be extended to support this as well
+
+- Create basic template to include as default -- could make use of the
+    extended template placeholder options
+
+- Create default .config file (with examples and such)
+
+- document the classes and ids available for CSS
+
+x Implement a preview URL scheme
+  - Maybe a "draft" directory?
+
 X Implement tag parsing and tag page building.
 
 x Fix a date format for the date line on each post.
 
-- Implement ability to edit and delete posts.
+X Implement ability to edit posts.
 
-- Need RSS or ATOM feed capability
-
-- Review ability to create a "static" page -- e.g. content that is different from your standard blog post. Do I want this feature. How would it be different than a regular blog post? I guess it could be pretty much a blog post, but it shows up differently by not being listed in the tags/all listing and doesn't get included in the front page.
-  - Implement if you decide you want it.
-
-- Rework make_index so it's portable for other uses in the script
-  - Build a list of files and pass that into the make_index
-
-x Implement a preview URL scheme
-  - Maybe a "draft" directory?
