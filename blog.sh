@@ -163,12 +163,14 @@ Commands:
              blog_home.
   delete     Delete an entry/static page.
   rebuild    Rebuild entire site (good for updating all pages with a new
-             template).
+             or updated template).
 
 Options:
   -h         Show usage.
   -v         Show version.
-  -H         Force HTML entry - only works with "new" command.
+  -H         Force HTML only -- primarily used with static command.
+             Note that HTML can be used regardless, but this will force
+             markdown to NOT be processed.
 
 ENDOFUSAGE
 }
