@@ -46,7 +46,7 @@ pandoc=${pandoc:-"pandoc"}
 templatefile=${templatefile:-"template.tmpl"}
 index_entries=${index_entries:-10} # default of 10 entires on index page
 tag_prefix=${tag_prefix:-"tag_"}
-baseurl=${baseurl:-"http://somesite.example/blog"}
+baseurl=${baseurl:-}
 previewpref=${previewpref:-"prev"}
 blogtitle=${blogtitle:-"My Blog"}
 blogsubtitle=${blogsubtitle:-"Yet another blog!"}
@@ -385,9 +385,55 @@ make_indexpage() {
 
 make_rssfeed() {
 
-  local mycontent
+  local c     # c for content
+  local pubdate
+  local file
+  local thistitle thiscontent thisdate
 
-} < <(ls -1 [0-9][0-9][0-9][0-9]*.html | sort -nr | head -n $index_entries)
+  >&2 echo "Building RSS feed..."
+
+  c+='<?xml version="1.0" encoding="UTF-8" ?>'"$nl"
+  c+='<rss version="2.0">'"$nl"
+  c+="<channel>$nl"
+  c+="  <title>$blogtitle</title>$nl"
+  c+="  <link>$baseurl</link>$nl"
+  c+="  <description>$blogsubtitle</description>$nl"
+  c+="  <language>en-us</language>$nl"
+
+  pubdate=$(date +"%a, %d %b %Y %H:%M:%S %Z")
+
+  c+="  <pubDate>$pubdate</pubDate>$nl"
+  c+="  <lastBuildDate>$pubdate</lastBuildDate>$nl"
+  c+="  <docs>http://www.rssboard.org/rss-specification</docs>$nl"
+  c+="  <generator>blog.sh</generator>$nl"
+
+  while read file; do
+    thistitle=$(get_title "$file")
+    thiscontent=$(get_content "$file")
+    thisdate=$(convert_date "${file:0:14}")
+    pubdate=$(date -d "$thisdate" +"%a, %d %b %Y %H:%M:%S %Z")
+
+    c+="  <item>$nl"
+    c+="    <title>$thistitle</title>$nl"
+    c+="    <link>$baseurl/${file%".md"}.html</link>$nl"
+    c+="    <author></author>$nl"
+    c+="    <pubDate>$pubdate</pubDate>$nl"
+    c+="    <guid>$baseurl/${file%".md"}.html</guid>$nl"
+    c+="    <description><![CDATA[$nl"
+    c+="${thiscontent}$nl"
+    c+="]]>$nl"
+    c+="    </description>$nl"
+    c+="  </item>$nl"
+  done
+
+  c+="</channel>$nl"
+  c+="</rss>$nl"
+
+  echo -e "$c" > feed.rss
+
+  >&2 echo "Done."
+
+} < <(ls -1 [0-9][0-9][0-9][0-9]*.md | sort -nr | head -n $index_entries)
  
 # Makes the page that contains links to all post on this blog
 # separated by month/year
@@ -672,6 +718,7 @@ do_edit() {
     fi
     make_indexpage
     make_allpage
+    make_rssfeed
     [[ $edit_type == "draft" ]] && echo "$editfile" >> $cleanuplist
 
   fi
@@ -702,6 +749,7 @@ do_rebuild() {
 
   make_indexpage
   make_allpage
+  make_rssfeed
 
 }
 
