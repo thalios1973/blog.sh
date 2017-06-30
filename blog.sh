@@ -42,6 +42,7 @@ source "$config"
 editor=${editor:-"$EDITOR"}
 [[ $editor == "" ]] && editor="vi"
 tmpdir=${tmpdir:-"/tmp"}
+pandoc=${pandoc:-"pandoc"}
 templatefile=${templatefile:-"template.tmpl"}
 index_entries=${index_entries:-10} # default of 10 entires on index page
 tag_prefix=${tag_prefix:-"tag_"}
@@ -215,8 +216,24 @@ get_content() {
   local myfile="$1"
   local mycontfile=$(mkstemp)
   tail -n +2 "$myfile" | grep -v -e "^%%TAGS:" > "$mycontfile"
-  pandoc < $mycontfile
+  $pandoc < $mycontfile
+}
 
+# Simply convert the date format from the post filename to something
+# that can be used by the date command (the -d argument specifically)
+# This doesn't account for timezone... that could be a problems if someone
+# tries to get fancy.
+convert_date() {
+  local thisdate=${1:-}
+  local year month day hour min
+
+  year=${thisdate:0:4}
+  month=${thisdate:4:2}
+  day=${thisdate:6:2}
+  hour=${thisdate:8:2}
+  min=${thisdate:10:2}
+
+  echo "${year}-${month}-${day} ${hour}:${min}"
 }
 
 # Make new entry html
@@ -226,7 +243,7 @@ make_entry() {
   local mycontent="${3-}"
   local mytags="${4-}"
   local mydate="${5-}"
-  local year month day hour min visdate
+  local d_date visdate
 
   # Pulling individual tags out of mytags into the array tags
   local -a tags
@@ -247,13 +264,9 @@ make_entry() {
   tagline+="</div>"
 
   [[ $mydate == "" ]] && mydate=$(date +%Y%m%d%H%M%S)
-  year=${mydate:0:4}
-  month=${mydate:4:2}
-  day=${mydate:6:2}
-  hour=${mydate:8:2}
-  min=${mydate:10:2}
+  d_date=$(convert_date "$mydate")
 
-  visdate="$(date -d "${year}-${month}-${day} ${hour}:${min}" +"%B %e, %Y %H:%M %Z")"
+  visdate="$(date -d "${d_date}" +"%B %e, %Y %H:%M %Z")"
 
   local newentry=""
   newentry+="<!-- start entry -->$nl"
@@ -369,6 +382,12 @@ make_indexpage() {
   >&2 echo "done."
 
 }
+
+make_rssfeed() {
+
+  local mycontent
+
+} < <(ls -1 [0-9][0-9][0-9][0-9]*.html | sort -nr | head -n $index_entries)
  
 # Makes the page that contains links to all post on this blog
 # separated by month/year
