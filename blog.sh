@@ -362,7 +362,7 @@ make_index() {
   done
 
   mycontent+="<div class=\"linksline\">$nl"
-  mycontent+="[ <a href=\"allposts.html\">More posts</a> | <a href=\"alltags.html\">All tags</a> | Subscribe ]$nl"
+  mycontent+="[ <a href=\"allposts.html\">More posts</a> | <a href=\"alltags.html\">All tags</a> | <a href=\"$baseurl/feed.rss\">Subscribe</a> ]$nl"
   mycontent+="</div>$nl"
 
   myoutput=${template//~~~CONTENT~~~/$mycontent}
