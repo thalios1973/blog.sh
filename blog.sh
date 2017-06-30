@@ -217,7 +217,7 @@ get_content() {
   local myfile="$1"
   local mycontfile=$(mkstemp)
   tail -n +2 "$myfile" | grep -v -e "^%%TAGS:" > "$mycontfile"
-  $pandoc < $mycontfile
+  eval "$pandoc $mycontfile"
 }
 
 # Simply convert the date format from the post filename to something
