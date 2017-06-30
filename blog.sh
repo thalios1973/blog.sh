@@ -44,6 +44,7 @@ editor=${editor:-"$EDITOR"}
 tmpdir=${tmpdir:-"/tmp"}
 pandoc=${pandoc:-"pandoc"}
 templatefile=${templatefile:-"template.tmpl"}
+rssfeedfile=${rssfeedfile:-"feed.rss"}
 index_entries=${index_entries:-10} # default of 10 entires on index page
 tag_prefix=${tag_prefix:-"tag_"}
 baseurl=${baseurl:-}
@@ -383,6 +384,9 @@ make_indexpage() {
 
 }
 
+# Makes a simple RSS 2.0 feed file. The file location can be set
+# by using the rssfeedfile config option (var). It defaults to 
+# "feed.rss".
 make_rssfeed() {
 
   local c     # c for content
@@ -429,7 +433,7 @@ make_rssfeed() {
   c+="</channel>$nl"
   c+="</rss>$nl"
 
-  echo -e "$c" > feed.rss
+  echo -e "$c" > "$rssfeedfile"
 
   >&2 echo "Done."
 
