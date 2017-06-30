@@ -1,4 +1,4 @@
-# blog.sh - A relatively simple bash bash-based blogging application
+# blog.sh - A relatively simple bash-based blogging application
 
 Author: Mike Gauthier &lt;thalios1973 at 3cx dot org&gt;
 
