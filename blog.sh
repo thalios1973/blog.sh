@@ -635,7 +635,7 @@ do_edit() {
       if [[ ${editfile:0:7} == "drafts/" ]]; then
         edit_type="draft"
       else
-        errorexit "Error: I can only edit *.md files is this blog's home ($PWD) or its drafts ($PWD/drafts) directories."
+        errorexit "Error: I can only edit *.md files in this blog's home ($PWD) or its drafts ($PWD/drafts) directories."
       fi
     fi
     cat "$editfile" > "$thisfile"
@@ -734,7 +734,9 @@ do_static() {
 }
 
 do_delete() {
-  echo "do_delete still needs to be created"
+  echo "Delete option not yet implemented. To delete a post manually, simply"
+  echo "delete (rm) the associated YYYYMMDDhhmmss_title.md and .html files."
+  echo "Run '$0 rebuild' to rebuild the site minus the deleted files."
 }
 
 do_rebuild() {
