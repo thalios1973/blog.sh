@@ -290,7 +290,7 @@ make_entry() {
 # Makes a filename "friendly" title for use in filenames
 make_fntitle() {
   local mytitle="$1"
-  echo -en "$mytitle" | tr -s 'A-Z[:blank:]' 'a-z-' | tr -d '!@#$%^&*()[]{}/'
+  echo -en "$mytitle" | tr -s 'A-Z[:blank:]' 'a-z-' | tr -d '?!@#$%^&*()[]{}/'
 }
 
 make_postpage() {
