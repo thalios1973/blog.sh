@@ -832,6 +832,3 @@ case ${1-} in
     exit 1
 esac
 
-
-echo "${editor_args[@]}"
-echo "${mdtool_args[@]}"
