@@ -41,8 +41,10 @@ source "$config"
 # config file.
 editor=${editor:-"$EDITOR"}
 [[ $editor == "" ]] && editor="vi"
+[[ "${editor_args[@]:-}" == "" ]] && editor_args=()
+mdtool=${pandoc:-"pandoc"}
+[[ "${mdtool_args[@]:-}" == "" ]] && mdtool_args=()
 tmpdir=${tmpdir:-"/tmp"}
-pandoc=${pandoc:-"pandoc"}
 templatefile=${templatefile:-"template.tmpl"}
 rssfeedfile=${rssfeedfile:-"feed.rss"}
 index_entries=${index_entries:-10} # default of 10 entires on index page
@@ -217,7 +219,7 @@ get_content() {
   local myfile="$1"
   local mycontfile=$(mkstemp)
   tail -n +2 "$myfile" | grep -v -e "^%%TAGS:" > "$mycontfile"
-  eval "$pandoc $mycontfile"
+  $mdtool "${mdtool_args[@]}" "$mycontfile"
 }
 
 # Simply convert the date format from the post filename to something
@@ -647,7 +649,7 @@ do_edit() {
   # Now what do you want to do wih this edited/new file?
   while [[ $myresp == "" ]]; do
 
-    eval "$editor $thisfile" || errorexit "Error: unable to edit file $thisfile ."
+    $editor ${editor_args[@]} "$thisfile" || errorexit "Error: unable to edit file $thisfile ."
     [[ $previewurl == "" ]] && previewurl=$(make_preview "$thisfile")
   	while [[ $myresp == "" ]]; do
         echo "Preview is at: $previewurl"
@@ -830,3 +832,6 @@ case ${1-} in
     exit 1
 esac
 
+
+echo "${editor_args[@]}"
+echo "${mdtool_args[@]}"
