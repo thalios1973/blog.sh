@@ -588,18 +588,28 @@ make_allpage() {
 # later removal.
 make_preview() {
   local thisfile=${1:-""}
-  local prevfn thismd thishtml
+  local e_url=${2:-}  # existing url
+  local prevfn thismd thishtml urlfile
 
   [[ $thisfile == "" ]] && errorexit "No file to make_preview with."
 
-  prevfn="$(randstr 6)"
-  thismd="${previewpref}-${prevfn}.md"
-  thishtml="${previewpref}-${prevfn}.html"
+  if [[ -z $e_url ]]; then
+
+    prevfn="$(randstr 6)"
+    thismd="${previewpref}-${prevfn}.md"
+    thishtml="${previewpref}-${prevfn}.html"
+    echo "$PWD/$thismd" >> "$cleanuplist"
+    echo "$PWD/$thishtml" >> "$cleanuplist"
+
+  else
+    thishtml="${e_url#$baseurl}"
+    thishtml=${thishtml#/}
+    thismd="${thishtml%".html"}.md"
+
+  fi
+
   cp "$thisfile" "$thismd"
   make_postpage "$thismd" skip
-
-  echo "$PWD/$thismd" >> "$cleanuplist"
-  echo "$PWD/$thishtml" >> "$cleanuplist"
   echo "$baseurl/$thishtml"
 }
 
@@ -649,11 +659,21 @@ do_edit() {
   # Now what do you want to do wih this edited/new file?
   while [[ $myresp == "" ]]; do
 
+    # Run the edit on the thisfile (which is a temp file)
     $editor ${editor_args[@]} "$thisfile" || errorexit "Error: unable to edit file $thisfile ."
-    [[ $previewurl == "" ]] && previewurl=$(make_preview "$thisfile")
+
+    # This passes the previewurl to make_preview. Initially (the first
+    # time the new/draft/existing post is edited) previewurl will be empty,
+    # but if the user selected [e]dit again, then on the second pass
+    # previewurl is now full with the preview url. make_preview will use
+    # the passed in var to update the existing preview file instead of
+    # creating a new one.
+    previewurl=$(make_preview "$thisfile" "$previewurl")
+
   	while [[ $myresp == "" ]]; do
         echo "Preview is at: $previewurl"
         if [[ $edit_type == "existing" ]]; then
+          echo "This is an existing published post, you cannot save to draft."
           echo -n "[p]ost, [E]dit again, or [d]iscard changes? (p/E/d) "
         else
           echo -n "[p]ost, [E]dit again, [s]ave to draft, or [d]iscard? (p/E/s/d) "
@@ -670,7 +690,7 @@ do_edit() {
        fi
 	  done
 
-    # Now that we have a response, do what you're told.
+    # Now that you have a response, do what you're told.
 
     # If [e]dit, set to nothing so it'll loop back to the top and open
     # this file for editing again
