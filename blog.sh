@@ -292,7 +292,7 @@ make_entry() {
 # Makes a filename "friendly" title for use in filenames
 make_fntitle() {
   local -l mytitle="$1" # forcing lower case
-  echo -en "$mytitle" | tr -s '[:blank:]' '-' | tr -d '?!@#$%^&*()[]{}/'
+  echo -en "$mytitle" | tr -s '[:blank:]' '-' | tr -d '"?!@#$%^&*()[]{}/'
 }
 
 make_postpage() {
