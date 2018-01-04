@@ -42,7 +42,7 @@ source "$config"
 editor=${editor:-"$EDITOR"}
 [[ $editor == "" ]] && editor="vi"
 [[ "${editor_args[@]:-}" == "" ]] && editor_args=("")
-mdtool=${pandoc:-"pandoc"}
+mdtool=${mdtool:-"pandoc"}
 [[ "${mdtool_args[@]:-}" == "" ]] && mdtool_args=("")
 tmpdir=${tmpdir:-"/tmp"}
 templatefile=${templatefile:-"template.tmpl"}
