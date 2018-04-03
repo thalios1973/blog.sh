@@ -239,6 +239,25 @@ convert_date() {
   echo "${year}-${month}-${day} ${hour}:${min}"
 }
 
+# push_to_template - Pushes content and other variables into the
+# template. Return completed template via echo. Call this function
+# with passed parameters (content, title, url) via command
+# substitution.
+# e.g. somevar=$(push_to_template "$content" "$title" "$url")
+push_to_template() {
+  local mycontent="${1-}"
+  local mytitle="${2-}"
+  local myurl="${3-}"
+  local template=$(<$templatefile)
+  local myoutput=""
+
+  myoutput=${template//~~~CONTENT~~~/$mycontent}
+  myoutput=${myoutput//~~~PAGETITLE~~~/$mytitle}
+  myoutput=${myoutput//~~~PAGEURL~~~/$myurl}
+
+  echo -e "$myoutput"
+}
+
 # Make new entry html
 make_entry() {
   local mytitle="${1-}"
@@ -319,7 +338,8 @@ make_postpage() {
   fi
 
   newentry=$(make_entry "$thistitle" "${newfn}.html" "$content" "$thesetags" "$mydate")
-  myoutput=${template//~~~CONTENT~~~/$newentry}
+  #myoutput=${template//~~~CONTENT~~~/$newentry}
+  myoutput=$(push_to_template "$newentry" "$thistitle" "${baseurl}/${newfn}.html")
 
   echo -e "$myoutput" > "${newfn}.html"
 
@@ -368,7 +388,8 @@ make_index() {
   mycontent+="[ <a href=\"allposts.html\">More posts</a> | <a href=\"alltags.html\">All tags</a> | <a href=\"$baseurl/feed.rss\">Subscribe</a> ]$nl"
   mycontent+="</div>$nl"
 
-  myoutput=${template//~~~CONTENT~~~/$mycontent}
+  #myoutput=${template//~~~CONTENT~~~/$mycontent}
+  myoutput=$(push_to_template "$mycontent" "$blogtitle - $blogsubtitle" "$baseurl")
   echo -e "$myoutput" > "$outfile"
 
 }
@@ -528,7 +549,8 @@ make_allpage() {
 
   mycontent+="</ul>$nl"
 
-  myoutput=${template//~~~CONTENT~~~/$mycontent}
+  #myoutput=${template//~~~CONTENT~~~/$mycontent}
+  myoutput=$(push_to_template "$mycontent" "$blogtitle - All Posts" "$baseurl/allposts.html")
   echo -e "$myoutput" > "allposts.html"
 
   >&2 echo "done."
@@ -573,7 +595,8 @@ make_allpage() {
 
   done < $tagsfile
 
-  myoutput=${template//~~~CONTENT~~~/$mycontent}
+  #myoutput=${template//~~~CONTENT~~~/$mycontent}
+  myoutput=$(push_to_template "$mycontent" "$blogtitle - All Tags" "$baseurl/alltags.html")
   echo -e "$myoutput" > "alltags.html"
 
   >&2 echo "done."
