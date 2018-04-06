@@ -1,11 +1,4 @@
-x RSS or ATOM feed capability
-
 - Static page support
- 
-x Provide additional template placeholder options (e.g. title, subtitle,
-    baseurl for home links, etc.). Should make it easier to just get
-    started
-  - .config will need to be extended to support this as well
 
 - Create basic template to include as default -- could make use of the
     extended template placeholder options
@@ -17,6 +10,13 @@ x Provide additional template placeholder options (e.g. title, subtitle,
 - Implement ability to delete posts (low priority)
 
 - Need some check to make sure there is a template file.
+
+x Provide additional template placeholder options (e.g. title, subtitle,
+    baseurl for home links, etc.). Should make it easier to just get
+    started
+  x .config will need to be extended to support this as well
+
+x RSS or ATOM feed capability
 
 x Implement a preview URL scheme
   - Maybe a "draft" directory?
