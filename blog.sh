@@ -239,19 +239,23 @@ convert_date() {
   echo "${year}-${month}-${day} ${hour}:${min}"
 }
 
-# push_to_template - Pushes content and other variables into the
-# template. Return completed template via echo. Call this function
-# with passed parameters (content, title, url) via command
-# substitution.
+# push_to_template - Pushes ~~~CONTENT~~~ and all other variables in the
+# template. Return completed template via echo. Call this function with
+# passed parameters (content, title, url) via command substitution.
 # e.g. somevar=$(push_to_template "$content" "$title" "$url")
 push_to_template() {
   local mycontent="${1-}"
   local mytitle="${2-}"
   local myurl="${3-}"
-  local template=$(<$templatefile)
-  local myoutput=""
+  local myoutput=$(<$templatefile)
 
-  myoutput=${template//~~~CONTENT~~~/$mycontent}
+  # The following three are from global variables set in the .config file.
+  myoutput=${myoutput//~~~TITLE~~~/$blogtitle}
+  myoutput=${myoutput//~~~SUBTITLE~~~/$blogsubtitle}
+  myoutput=${myoutput//~~~BASEURL~~~/$baseurl}
+
+  # These are passed in as arguments to this function.
+  myoutput=${myoutput//~~~CONTENT~~~/$mycontent}
   myoutput=${myoutput//~~~PAGETITLE~~~/$mytitle}
   myoutput=${myoutput//~~~PAGEURL~~~/$myurl}
 
@@ -323,7 +327,6 @@ make_postpage() {
   local thistitle=$(get_title "$myfile")
   local thesetags=$(get_tags "$myfile")
   local content=$(get_content "$myfile")
-  local template=$(<$templatefile)
   local fntitle newfn newentry myoutput
   local mydate=""
 
@@ -338,7 +341,6 @@ make_postpage() {
   fi
 
   newentry=$(make_entry "$thistitle" "${newfn}.html" "$content" "$thesetags" "$mydate")
-  #myoutput=${template//~~~CONTENT~~~/$newentry}
   myoutput=$(push_to_template "$newentry" "$thistitle" "${baseurl}/${newfn}.html")
 
   echo -e "$myoutput" > "${newfn}.html"
@@ -357,7 +359,6 @@ make_index() {
   local fname line x
   local readmore
   local mycontent=""
-  local template=$(<$templatefile)
   local myoutput
   local breakregex='^<hr\ */*>$'
 
@@ -388,7 +389,6 @@ make_index() {
   mycontent+="[ <a href=\"allposts.html\">More posts</a> | <a href=\"alltags.html\">All tags</a> | <a href=\"$baseurl/feed.rss\">Subscribe</a> ]$nl"
   mycontent+="</div>$nl"
 
-  #myoutput=${template//~~~CONTENT~~~/$mycontent}
   myoutput=$(push_to_template "$mycontent" "$blogtitle - $blogsubtitle" "$baseurl")
   echo -e "$myoutput" > "$outfile"
 
@@ -471,7 +471,6 @@ make_allpage() {
   local sect_date last_sect_date=""
   local thistitle thisdate thesetags
   local mycontent myoutput
-  local template=$(<$templatefile)
   local postsfile=$(mkstemp)
   local tagsfile=$(mkstemp)
   local -A posts
@@ -549,7 +548,6 @@ make_allpage() {
 
   mycontent+="</ul>$nl"
 
-  #myoutput=${template//~~~CONTENT~~~/$mycontent}
   myoutput=$(push_to_template "$mycontent" "$blogtitle - All Posts" "$baseurl/allposts.html")
   echo -e "$myoutput" > "allposts.html"
 
@@ -595,7 +593,6 @@ make_allpage() {
 
   done < $tagsfile
 
-  #myoutput=${template//~~~CONTENT~~~/$mycontent}
   myoutput=$(push_to_template "$mycontent" "$blogtitle - All Tags" "$baseurl/alltags.html")
   echo -e "$myoutput" > "alltags.html"
 
@@ -843,12 +840,6 @@ done
 # Resetting positon on ARGs
 shift $((OPTIND-1))
 numopts=$#
-
-# Setting up template file. Inserts TITLE, SUBTITLE, and BASEURL. CONTENT
-# is left for later manipulation.
-tmptemplate=$(mkstemp)
-sed -e "s#~~~TITLE~~~#$blogtitle#g; s#~~~SUBTITLE~~~#$blogsubtitle#g; s#~~~BASEURL~~~#$baseurl#g;" "$templatefile" > "$tmptemplate"
-templatefile="$tmptemplate"
 
 case ${1-} in
   new)
