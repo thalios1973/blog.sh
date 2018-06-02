@@ -7,7 +7,7 @@
 
 - [ ] Create default .config file (with examples and such)
 
-- [ ]document the classes and ids available for CSS
+- [ ] Document the classes and ids available for CSS
 
 - [ ] Implement ability to delete posts (low priority)
 
