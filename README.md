@@ -4,7 +4,7 @@ Author: Mike Gauthier &lt;thalios1973 at 3cx dot org&gt;
 
 ## VERSION HISTORY
 
-* 0.1 First relatively working version. Certainly some bugs. Being used actively at [blog.3cx.org](http://blog.3cx.org).
+* 0.1.0 First relatively working version. Certainly some bugs. Being used actively at [blog.3cx.org](http://blog.3cx.org).
 
 ## WHY BASH?
 
