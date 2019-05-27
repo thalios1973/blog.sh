@@ -295,7 +295,7 @@ make_entry() {
   tagline+="</div>"
 
   if [[ "$post_footer" != "" ]]; then
-    footerline="<div class=\"post_footer\">${post_footer/~~~POSTURL~~~/$posturl}</div>"
+    footerline="<div class=\"post_footer\">${post_footer/~~~PAGEURL~~~/$posturl}</div>"
   else
     footerline=""
   fi
@@ -310,7 +310,7 @@ make_entry() {
   newentry+="<div class=\"entryholder\">$nl"
   newentry+="<div class=\"entrytitle\">$nl"
   newentry+="<h3><a href=\"$mylink\">$mytitle</a></h3>$nl"
-  newentry+="<div class=\"entrysubt\">$visdate</span></a></div>$nl"
+  newentry+="<div class=\"entrysubt\">$visdate</div>$nl"
   newentry+="</div><!-- entrytitle -->$nl"
   newentry+="<div class=\"entrycontent\">$nl"
 
@@ -405,7 +405,9 @@ make_index() {
     # Adding index_post_footer, as set in .config. This simply replaces the string
     # "<!-- indxft -->" from the already created html post.
     posturl="$baseurl/$fname"
-    [[ $index_post_footer != "" ]] && thisfooter="<div class=\"index_post_footer\">${index_post_footer/~~~POSTURL~~~/$posturl}</div>"
+    index_post_footer="${index_post_footer/~~~PAGEURL~~~/$posturl}"
+    index_post_footer="${index_post_footer/~~~PAGETITLE~~~/$pagetitle}"
+    [[ $index_post_footer != "" ]] && thisfooter="<div class=\"index_post_footer\">${index_post_footer}</div>"
     replace_string="<\!-- indxft -->"
     mycontent="${mycontent/$replace_string/$thisfooter}"
 
