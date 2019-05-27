@@ -53,6 +53,9 @@ baseurl=${baseurl:-}
 previewpref=${previewpref:-"prev"}
 blogtitle=${blogtitle:-"My Blog"}
 blogsubtitle=${blogsubtitle:-"Yet another blog!"}
+post_footer=${post_footer:-}
+index_post_footer=${index_post_footer:-}
+post_page_footer=${post_page_footer:-}
 
 # Global variables not to be overridden via config.
 # Or just creating global variables for easy of use later
@@ -271,6 +274,8 @@ make_entry() {
   local mydate="${5-}"
   local d_date visdate
 
+  local posturl="$baseurl/$mylink"
+
   # Pulling individual tags out of mytags into the array tags
   local -a tags
   OIFS=$IFS
@@ -289,6 +294,12 @@ make_entry() {
   done
   tagline+="</div>"
 
+  if [[ "$post_footer" != "" ]]; then
+    footerline="<div class=\"post_footer\">${post_footer/~~~POSTURL~~~/$posturl}</div>"
+  else
+    footerline=""
+  fi
+
   [[ $mydate == "" ]] && mydate=$(date +%Y%m%d%H%M%S)
   d_date=$(convert_date "$mydate")
 
@@ -306,6 +317,8 @@ make_entry() {
   newentry+="$mycontent"
   newentry+="$nl<!-- end content -->$nl"
   newentry+="$tagline$nl"
+  newentry+="$footerline$nl"
+  newentry+="<!-- indxft -->$nl"
   newentry+="</div></div>$nl"
   newentry+="<!-- end entry -->$nl"
 
@@ -341,6 +354,10 @@ make_postpage() {
   fi
 
   newentry=$(make_entry "$thistitle" "${newfn}.html" "$content" "$thesetags" "$mydate")
+  # Adding post_page_footer to end of newentry. This will be after the closing
+  # -- end entry -- html comment, but will still be inside the content div.
+  newentry+="$nl${post_page_footer/~~~POSTTITLE~~~/$thistitle}$nl"
+
   myoutput=$(push_to_template "$newentry" "$thistitle" "${baseurl}/${newfn}.html")
 
   echo -e "$myoutput" > "${newfn}.html"
@@ -361,6 +378,7 @@ make_index() {
   local mycontent=""
   local myoutput
   local breakregex='^<hr\ */*>$'
+  local thisfooter=""
 
   [[ $pagetitle != "" ]] && mycontent+="<h1 class=\"pagetitle\">$pagetitle</h1>$nl"
 
@@ -383,6 +401,14 @@ make_index() {
         fi
       fi
     done < "$fname"
+
+    # Adding index_post_footer, as set in .config. This simply replaces the string
+    # "<!-- indxft -->" from the already created html post.
+    posturl="$baseurl/$fname"
+    [[ $index_post_footer != "" ]] && thisfooter="<div class=\"index_post_footer\">${index_post_footer/~~~POSTURL~~~/$posturl}</div>"
+    replace_string="<\!-- indxft -->"
+    mycontent="${mycontent/$replace_string/$thisfooter}"
+
   done
 
   mycontent+="<div class=\"linksline\">$nl"
