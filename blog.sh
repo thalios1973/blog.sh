@@ -378,6 +378,8 @@ make_index() {
   local mycontent=""
   local myoutput
   local breakregex='^<hr\ */*>$'
+  local posttitle
+  local this_index_footer
   local thisfooter=""
 
   [[ $pagetitle != "" ]] && mycontent+="<h1 class=\"pagetitle\">$pagetitle</h1>$nl"
@@ -405,9 +407,12 @@ make_index() {
     # Adding index_post_footer, as set in .config. This simply replaces the string
     # "<!-- indxft -->" from the already created html post.
     posturl="$baseurl/$fname"
-    index_post_footer="${index_post_footer/~~~PAGEURL~~~/$posturl}"
-    index_post_footer="${index_post_footer/~~~PAGETITLE~~~/$pagetitle}"
-    [[ $index_post_footer != "" ]] && thisfooter="<div class=\"index_post_footer\">${index_post_footer}</div>"
+    posttitle=$(get_title "${fname/%.html/.md}")
+    echo "posturl = $posturl" >> /tmp/debug.txt
+    echo "posttitle = $posttitle" >> /tmp/debug.txt
+    this_index_footer="${index_post_footer/~~~PAGEURL~~~/$posturl}"
+    this_index_footer="${this_index_footer/~~~PAGETITLE~~~/$posttitle}"
+    [[ $index_post_footer != "" ]] && thisfooter="<div class=\"index_post_footer\">${this_index_footer}</div>"
     replace_string="<\!-- indxft -->"
     mycontent="${mycontent/$replace_string/$thisfooter}"
 
